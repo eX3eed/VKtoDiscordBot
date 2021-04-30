@@ -1,12 +1,13 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const {VKApi, ConsoleLogger, BotsLongPollUpdatesProvider} = require('node-vk-sdk');
 const fs = require('fs');
+const {VKApi, ConsoleLogger, BotsLongPollUpdatesProvider} = require('node-vk-sdk');
 const filename = 'vkdata.json'
-const token = 'MzIxNjc4NDc1NTExNDYzOTM4.WTbQbQ.IjDysJvuAqq64g-SFC6wRktb0g4'
+const DiscordToken = 'MzIxNjc4NDc1NTExNDYzOTM4.WTbQbQ.IjDysJvuAqq64g-SFC6wRktb0g4'
 
 let photosURLs = [];
 let message = '';
+let check = null;
 
 function updateFile() {
     fs.writeFileSync(filename, " ", (err) => {
@@ -16,7 +17,6 @@ function updateFile() {
 }
 
 // Вк обвязка + запись в файл (в случае если данные уже существуют в файле, нужно сделать перезапить этих файлов)
-// По хорошему, стоит вынести токен и айди группы в отдельный файл
 
 let api = new VKApi({
     token: 'ec30948aa449534b8c4aca78178c981badcf4b549d6e3d4bf90a5c597ea297f3cc56568bb8f89beb60f71',
@@ -69,10 +69,12 @@ setInterval(() => {
   else
   {
     message = data[0].object.text;
+
     let temp = 'attachment' in data[0].object
     if(temp === false){
       checkImageFromData();
     }
+
     let photosArray = data[0].object.attachments;
     if(photosArray === undefined){
       setTimeout(() => {
@@ -84,36 +86,61 @@ setInterval(() => {
         console.log(photosURLs)
     }
   }
-    
+
     console.log("записал данные, все ок")
-    updateFile();
 
 }, 28000);
 
-//Сделать проверку, в случае если нет текста в посте, но есть картинки
-//Проверить код на работоспособность
-//Подключить дискорд уже наконец-то, заебался ебаться с правильным получением данных
-
-client.login(token);
-//Дискорд обвязка
+//Дискорд обвязка + отправка сообщения
+client.login(DiscordToken);
 client.on('ready', () => {
     console.log('Discord Bot activated');
     let temp = client.channels.cache.find(channel => channel.id === '832692528095559753')
 
     setInterval( () => {
-        if( photosURLs !== undefined && message !== undefined){
-            temp.send(message);
-            for (let i = 0; i < photosURLs.length; i++) {
-                const attachemntPhoto = new Discord.MessageAttachment(photosURLs[i]);
-                temp.send(attachemntPhoto)
+
+        //Если есть только сообщение
+        if(message){
+            check = 1;
+        }
+        //Есть и сообщение и фото
+        if(message && photosURLs.length){
+            check = 2;
+        }
+        //Нет сообщений но есть фото
+        if(!message && photosURLs.length){
+            check = 3
+        }
+            switch (check) {
+                case 1: {
+                    temp.send(message)
+                    message = undefined;
+                    break;
+                }
+                case 2: {
+                    temp.send(message);
+                    for (let i = 0; i < photosURLs.length; i++) {
+                        const attachemntPhoto = new Discord.MessageAttachment(photosURLs[i]);
+                        temp.send(attachemntPhoto)
+                    }
+                    message = undefined;
+                    photosURLs = [];
+                    break;
+                }
+                case 3: {
+                    for (let i = 0; i < photosURLs.length; i++) {
+                        const attachemntPhoto = new Discord.MessageAttachment(photosURLs[i]);
+                        temp.send(attachemntPhoto)
+                    }
+                    photosURLs = [];
+                    break;
+                }
+                default: {
+                    console.log('Небыло данных, сообщение не отправил')
+                }
+
             }
-            photosURLs = undefined;
-            message = undefined;
-        }
-        else{
-            console.log('Данных не было')
-        }
     }, 40000)
 })
 
-// //По хорошему, стоит бы вынести токен дискорда в отдельный файл
+//По хорошему, стоит бы вынести токен дискорда в отдельный файл
