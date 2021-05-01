@@ -3,23 +3,22 @@ const client = new Discord.Client();
 const fs = require('fs');
 const {VKApi, ConsoleLogger, BotsLongPollUpdatesProvider} = require('node-vk-sdk');
 const filename = 'vkdata.json'
-const DiscordToken = 'MzIxNjc4NDc1NTExNDYzOTM4.WTbQbQ.IjDysJvuAqq64g-SFC6wRktb0g4'
+//const DiscordToken = 'MzIxNjc4NDc1NTExNDYzOTM4.WTbQbQ.IjDysJvuAqq64g-SFC6wRktb0g4'
+
+let config = fs.readFileSync('config.json')
+let configData = JSON.parse(config)
+
+let DiscordToken = configData.tokens.DiscordToken;
+let VKToken = configData.tokens.VKToken;
+let DiscordChannel = configData.DiscordChannel;
 
 let photosURLs = [];
 let message = '';
 let check = null;
 
-function updateFile() {
-    fs.writeFileSync(filename, " ", (err) => {
-      if (err) throw err;
-    })
-    console.log("Почистил файл");
-}
-
 // Вк обвязка + запись в файл (в случае если данные уже существуют в файле, нужно сделать перезапить этих файлов)
-
 let api = new VKApi({
-    token: 'ec30948aa449534b8c4aca78178c981badcf4b549d6e3d4bf90a5c597ea297f3cc56568bb8f89beb60f71',
+    token: VKToken,
     logger: new ConsoleLogger(),
     timeout: 27000
 })
@@ -91,11 +90,18 @@ setInterval(() => {
 
 }, 28000);
 
+function updateFile() {
+    fs.writeFileSync(filename, " ", (err) => {
+        if (err) throw err;
+    })
+    console.log("Почистил файл");
+}
+
 //Дискорд обвязка + отправка сообщения
 client.login(DiscordToken);
 client.on('ready', () => {
     console.log('Discord Bot activated');
-    let temp = client.channels.cache.find(channel => channel.id === '832692528095559753')
+    let temp = client.channels.cache.find(channel => channel.id === DiscordChannel)
 
     setInterval( () => {
 
