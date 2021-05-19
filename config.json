@@ -1,7 +1,7 @@
 {
   "tokens": {
-    "DiscordToken": "MzIxNjc4NDc1NTExNDYzOTM4.WTbQbQ.IjDysJvuAqq64g-SFC6wRktb0g4",
-    "VKToken": "ec30948aa449534b8c4aca78178c981badcf4b549d6e3d4bf90a5c597ea297f3cc56568bb8f89beb60f71"
+    "DiscordToken": "your discord token here",
+    "VKToken": "your vk group token here"
   },
-  "DiscordChannel": "832692528095559753"
+  "DiscordChannel": "discord channel id here"
 }
