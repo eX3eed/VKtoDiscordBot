@@ -1,0 +1,36 @@
+{
+  "name": "vktodiscordbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "node-vk-sdk": "^1.1.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eX3eed/VKtoDiscordBot.git"
+  },
+  "keywords": [
+    "simple",
+    "bot",
+    "connect",
+    "to",
+    "vk",
+    "and",
+    "send",
+    "post",
+    "to",
+    "discord"
+  ],
+  "author": "eX3eed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eX3eed/VKtoDiscordBot/issues"
+  },
+  "homepage": "https://github.com/eX3eed/VKtoDiscordBot#readme"
+}
