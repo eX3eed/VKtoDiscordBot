@@ -27,7 +27,7 @@ updatesProvider.getUpdates((updates) => {
   updateFile();
   fs.appendFile(filename, JSON.stringify(updates), (err) => {
     if (err) throw err;
-    console.log("Данные были добавлены");
+    console.log("Data added");
   });
 });
 
@@ -136,7 +136,7 @@ client.on("ready", () => {
         break;
       }
       default: {
-        console.log("Небыло данных, сообщение не отправил");
+        console.log("no data, message not sent");
       }
     }
   }, 40000);
